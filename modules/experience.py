@@ -10,10 +10,17 @@ def ensure_data_dir():
 def load_data():
     ensure_data_dir()
     if os.path.exists(DATA_PATH):
-        with open(DATA_PATH, 'r') as f:
-            return json.load(f)
+        try:
+            with open(DATA_PATH, 'r') as f:
+                content = f.read().strip()
+                if content:  # Check if file is not empty
+                    return json.load(open(DATA_PATH, 'r'))
+                else:
+                    return {}
+        except json.JSONDecodeError:
+            print("Warning: Invalid JSON in data file. Creating new data.")
+            return {}
     return {}
-
 def save_data(data):
     ensure_data_dir()
     with open(DATA_PATH, 'w') as f:

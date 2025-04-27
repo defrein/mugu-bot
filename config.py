@@ -7,6 +7,11 @@ load_dotenv()
 # Bot configuration
 PREFIX = '/'
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+if not DISCORD_TOKEN:
+    print("ERROR: Discord token not found in environment variables!")
+
+if DISCORD_TOKEN is None:
+    raise ValueError("DISCORD_TOKEN is not set in the environment variables.")
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 
 # Experience settings
