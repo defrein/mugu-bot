@@ -14,6 +14,9 @@ if DISCORD_TOKEN is None:
     raise ValueError("DISCORD_TOKEN is not set in the environment variables.")
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 
+AI_API_KEY = os.getenv("AI_API_KEY")
+AI_API_URL = os.getenv("AI_API_URL", "https://api.openai.com/v1/chat/completions")
+
 # Experience settings
 XP_SETTINGS = {
     'login': 10,

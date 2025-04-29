@@ -1,11 +1,12 @@
 import discord
 from discord.ext import commands
 import datetime
+import aiohttp
 from modules.pet import Pet
 from modules.missions import process_login, process_journal, process_puzzle
 from modules.github import link_github_account, update_github_commits
 from database import get_user_profile, ensure_database_exists, migrate_from_json
-from config import PREFIX, DISCORD_TOKEN, calculate_level_requirement
+from config import PREFIX, DISCORD_TOKEN, AI_API_KEY, AI_API_URL, calculate_level_requirement
 
 # Initialize database
 ensure_database_exists()
@@ -108,6 +109,53 @@ And so on...
 """
     embed = discord.Embed(title="Pet Bot Help", description=help_text, color=0x00ff00)
     await ctx.send(embed=embed)
+    
+@bot.command(name="ask-ai")
+async def ask_ai(ctx, *, question=None):
+    # Check if question is provided
+    if not question:
+        await ctx.send("Please provide a question to ask the AI. Usage: `/ask-ai your question here`")
+        return
+
+    # Check if API key is configured
+    if not AI_API_KEY:
+        await ctx.send("AI API key is not configured. Please set the AI_API_KEY in your .env file.")
+        return
+    
+    # Let the user know we're processing their request
+    async with ctx.typing():
+        try:
+            # Create the API request payload (adjust based on the AI API you're using)
+            payload = {
+                "model": "gpt-3.5-turbo",  # Or whichever model you prefer
+                "messages": [
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": question}
+                ],
+                "max_tokens": 500
+            }
+            
+            headers = {
+                "Authorization": f"Bearer {AI_API_KEY}",
+                "Content-Type": "application/json"
+            }
+            
+            # Make the API request
+            async with aiohttp.ClientSession() as session:
+                async with session.post(AI_API_URL, json=payload, headers=headers) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        # Extract the AI's response (adjust based on the API response format)
+                        ai_response = data["choices"][0]["message"]["content"]
+                        
+                        # Send the response back to Discord
+                        await ctx.send(f"**AI Response:**\n{ai_response}")
+                    else:
+                        error_text = await response.text()
+                        await ctx.send(f"Error: API returned status {response.status}\n```{error_text[:1000]}```")
+        
+        except Exception as e:
+            await ctx.send(f"An error occurred while processing your request: {str(e)}")
 
 # Run the bot
 try:

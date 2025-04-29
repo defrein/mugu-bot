@@ -51,7 +51,7 @@ Level up your virtual pet by solving (idk yet), journaling, and committing to Gi
 
     ```
     DISCORD_TOKEN=your_token_here
-    GITHUB_TOKEN=your_github_token_here (optional if needed)
+    AI_API_KEY=your_api_key
     ```
 
 4. Run the bot:
