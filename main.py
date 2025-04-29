@@ -4,8 +4,12 @@ import datetime
 from modules.pet import Pet
 from modules.missions import process_login, process_journal, process_puzzle
 from modules.github import link_github_account, update_github_commits
-from modules.experience import get_user_profile, load_data
+from database import get_user_profile, ensure_database_exists, migrate_from_json
 from config import PREFIX, DISCORD_TOKEN, calculate_level_requirement
+
+# Initialize database
+ensure_database_exists()
+migrate_from_json()  # Migrate existing data if any
 
 # Bot setup with command prefix
 intents = discord.Intents.default()
