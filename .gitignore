@@ -1,4 +1,6 @@
 .env
 __pycache__/*
 data/pet_data.json
+data/pet_data.json.bak
+data/pet_database.sqlite
 env/
