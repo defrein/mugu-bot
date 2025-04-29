@@ -1,6 +1,6 @@
-# Discord XP Pet Bot
+# Discord Pet Bot
 
-Level up your virtual pet by coding, journaling, and committing to GitHub! 🐾
+Level up your virtual pet by solving (idk yet), journaling, and committing to GitHub! 🐾
 
 ## Commands
 
